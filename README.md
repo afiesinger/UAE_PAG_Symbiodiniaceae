@@ -1,2 +1,3 @@
-# UAE_MetaB_ITS2
-Decadal comparison of ITS2 data of Platygyra daedalea in the Persian/Arabian Gulf and Oman Sea
+# Symbiodiniaceae community composition of the corals Porites harrisoni and Platygyra deadalea from three sites in the (Southern) Persian/Arabian Gulf and Gulf of Oman
+
+tbd
