@@ -3,7 +3,7 @@
 # manipulate tables output by SymPortal
 #' ------------------------------------
 
-# ------------------- THRESHOLD <1% SEQUENCE ABUNDANCE ---------------------
+#' ------------------- THRESHOLD <1% SEQUENCE ABUNDANCE ---------------------
 
 rm(list = ls())
 
