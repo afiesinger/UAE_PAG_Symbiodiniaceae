@@ -155,7 +155,7 @@ cols_2022 <- c(
   "D5a-D5-D5ah-D4" = "#44AA77"
 )
 
-# ------------------------------- PLOTTING ------------------------
+#' ------------------------------- PLOTTING ------------------------
 
 # reorder dataset for plot - sorted by its2 type profile
 
