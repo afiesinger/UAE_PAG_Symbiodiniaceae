@@ -5,13 +5,9 @@ Scripts for statistical testing and visualisation of Symbiodiniaceae community c
 ## Scripts:
 
 1. its2_post_med_seqs.R
-
 2. its2_type_profs.R
-
-4. stats_2022.R
-
-5. stats_2012-2022.R
-
-6. pcoa_decadal.R
-7. dendrogram_fig.R
+3. stats_2022.R
+4. stats_2012-2022.R
+5. pcoa_decadal.R
+6. dendrogram_fig.R
 
