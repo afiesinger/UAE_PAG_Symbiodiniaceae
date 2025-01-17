@@ -11,10 +11,10 @@ rm(list = ls())
 library(dplyr)
 
 # setwd
-setwd("C:/Users/fiesi/OneDrive/PhD_UKon/Data_analysis/NCCT_MetaB/ITS2/SymPortal_results_fiesinger/post_med_seqs")
+setwd("path/to/dir")
 
 # Read the data
-data <- read.delim('seqs.relative.abund_and_meta.txt')
+data <- read.delim('XXX.seqs.relative.abund_and_meta.txt')
 head(data)
 
 # Select columns to keep
@@ -38,8 +38,7 @@ replace_small_values <- function(x) {
 data_filt[, 2:ncol(data_filt)] <- lapply(data_filt[, 2:ncol(data_filt)], replace_small_values)
 final_data <- data_filt
 
-##### count total sequences in clades
-
+# count total sequences in clades #
 # Identify columns for each clade
 clade_A_cols <- grep("^A", colnames(final_data), value = TRUE)
 clade_B_cols <- grep("^B", colnames(final_data), value = TRUE)
@@ -66,7 +65,7 @@ final_data$CladeI_Sum <- final_data[, clade_I_cols]
 head(final_data)
 
 # Save the summarized data to a new file
-write.csv(final_data, "POSTMED_SEQS_Fiesinger_cleaned_1p_THRESHOLD.csv")
+write.csv(final_data, "filename.csv")
 
 # COUNT OCCURRENCES -- how many samples have ITS2 sequences from one genus, from two genera, etc?
 data <- final_data
