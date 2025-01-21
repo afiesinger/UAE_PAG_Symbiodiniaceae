@@ -7,7 +7,7 @@
 #' -------------------- PACKAGES & DATA ---------------------
 library(vegan)
 
-# We are utilizing the data.frame "its2ProfsNorm" (ITS2 type profiles normalized) from the script "its2_type_profs.R"
+# We are utilizing the data.frame "its2ProfsNorm" (ITS2 type profiles normalized) from the script "its2_seqs_profs_2022.R"
 
 #' ------------------------ PERMDISP -----------------------
 # Using betadisper() in vegan to look at multivariate homogeneity of dispersion (PERMDISP) between sites and species using Bray-Curtis dissimilarity. 
