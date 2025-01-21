@@ -10,10 +10,13 @@ Metabarcoding using the ITS2 marker gene region and analytical framework https:/
 
 ## Scripts:
 
-1. its2_post_med_seqs.R
-2. its2_type_profs.R
-3. stats_2022.R
-4. stats_2012-2022.R
-5. pcoa_decadal.R
-6. dendrogram_fig.R
+Data from 2022:
+1. its2_seqs_profs_2022.R
+2. stats_2022.R
+
+Decadal comparison 2012-2022:
+1. its2_seqs_profs_2012-2022.R
+2. stats_2012-2022.R
+3. pcoa_decadal.R
+4. categorical_plot_decadal.comp.R
 
