@@ -88,7 +88,7 @@ gssProf = otuStack(its2ProfsPerc, count.columns = c(4:length(its2ProfsPerc[1, ])
 
 # split dataset by Site to plot different sites
 gssProfSY = gssProf %>% filter(Site == "SY") %>% group_by(Genotype, Species, otu, count)
-gssProfSI = gssProf %>% filter(Site == "SI") %>% group_by(Genotype, Species, otu, count)
+gssProfAA = gssProf %>% filter(Site == "AA") %>% group_by(Genotype, Species, otu, count)
 gssProfSA = gssProf %>% filter(Site == "SA") %>% group_by(Genotype, Species, otu, count)
 
 # split dataset by Species to plot the two species separately
@@ -98,10 +98,10 @@ gssProfPdae = gssProf %>% filter(Species == "Pdae") %>% group_by(Site, Genotype,
 # split dataset by Species & then Site
 gssProfPharSA = gssProfPhar %>% filter(Site == "SA") %>% group_by(Genotype, Species, otu, count)
 gssProfPharSY = gssProfPhar %>% filter(Site == "SY") %>% group_by(Genotype, Species, otu, count)
-gssProfPharSI = gssProfPhar %>% filter(Site == "SI") %>% group_by(Genotype, Species, otu, count)
+gssProfPharAA = gssProfPhar %>% filter(Site == "AA") %>% group_by(Genotype, Species, otu, count)
 
 gssProfPdaeSY = gssProfPdae %>% filter(Site == "SY") %>% group_by(Genotype, Species, otu, count)
-gssProfPdaeSI = gssProfPdae %>% filter(Site == "SI") %>% group_by(Genotype, Species, otu, count)
+gssProfPdaeAA = gssProfPdae %>% filter(Site == "AA") %>% group_by(Genotype, Species, otu, count)
 
 # sort by symbiont type
 p = sort(levels(gssProf$otu), decreasing = F)
@@ -171,11 +171,11 @@ gssProfPharSY <- gssProfPharSY %>%
 levels <- unique(gssProfPharSY$Genotype)
 gssProfPharSY$Genotype <- factor(gssProfPharSY$Genotype, levels = levels)
 
-gssProfPharSI <- gssProfPharSI %>%
+gssProfPharAA <- gssProfPharAA %>%
   arrange(desc(count))
 
-levels <- unique(gssProfPharSI$Genotype)
-gssProfPharSI$Genotype <- factor(gssProfPharSI$Genotype, levels = levels)
+levels <- unique(gssProfPharAA$Genotype)
+gssProfPharAA$Genotype <- factor(gssProfPharAA$Genotype, levels = levels)
 
 gssProfPdaeSY <- gssProfPdaeSY %>%
   arrange(desc(count))
@@ -183,11 +183,11 @@ gssProfPdaeSY <- gssProfPdaeSY %>%
 levels <- unique(gssProfPdaeSY$Genotype)
 gssProfPdaeSY$Genotype <- factor(gssProfPdaeSY$Genotype, levels = levels)
 
-gssProfPdaeSI <- gssProfPdaeSI %>%
+gssProfPdaeAA <- gssProfPdaeAA %>%
   arrange(desc(count))
 
-levels <- unique(gssProfPdaeSI$Genotype)
-gssProfPdaeSI$Genotype <- factor(gssProfPdaeSI$Genotype, levels = levels)
+levels <- unique(gssProfPdaeAA$Genotype)
+gssProfPdaeAA$Genotype <- factor(gssProfPdaeAA$Genotype, levels = levels)
 
 # plot in 2 panels; plot each ggplot first, then ggarrange
 
@@ -225,8 +225,8 @@ phar_sy = ggplot() +
         legend.background = element_blank(),
         plot.background = element_blank())
 
-phar_si = ggplot() +
-  geom_bar(aes(y = count, x = Genotype, fill = factor(otu)), data = gssProfPharSI, stat = "identity", position = "fill")  + 
+phar_aa = ggplot() +
+  geom_bar(aes(y = count, x = Genotype, fill = factor(otu)), data = gssProfPharAA, stat = "identity", position = "fill")  + 
   scale_y_continuous(labels = percent_format(), expand = c(0, 0)) + 
   labs(y = "Percentage", x = "", title = expression(paste(italic("N"), " = 40"))) +
   scale_fill_manual(values = cols_2022, breaks = p) + 
@@ -260,8 +260,8 @@ pdae_sy = ggplot() +
         legend.background = element_blank(),
         plot.background = element_blank())
 
-pdae_si = ggplot() +
-  geom_bar(aes(y = count, x = Genotype, fill = factor(otu)), data = gssProfPdaeSI, stat = "identity", position = "fill")  + 
+pdae_aa = ggplot() +
+  geom_bar(aes(y = count, x = Genotype, fill = factor(otu)), data = gssProfPdaeAA, stat = "identity", position = "fill")  + 
   scale_y_continuous(labels = percent_format(), expand = c(0, 0)) + 
   labs(y = "", x = "Host genotype", title = expression(paste(italic("N"), " = 40"))) +
   scale_fill_manual(values = cols_2022, breaks = p) +
@@ -278,5 +278,5 @@ pdae_si = ggplot() +
         legend.background = element_blank(),
         plot.background = element_blank())
 
-g = ggarrange(phar_sa, phar_sy, phar_si, pdae_sy, pdae_si, ncol = 3, nrow = 2)
+g = ggarrange(phar_sa, phar_sy, phar_aa, pdae_sy, pdae_aa, ncol = 3, nrow = 2)
 ggsave(filename = "filename.pdf", plot = g, dpi = 300, width = 18, height = 12, units = "in")
