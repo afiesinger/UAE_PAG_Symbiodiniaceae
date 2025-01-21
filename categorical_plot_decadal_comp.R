@@ -1,5 +1,8 @@
 #!/usr/bin/env Rscript
 
+# categorical plot including a dissimilarity dendrogram of ITS2 type profiles in the combined dataset 2012 & 2022 based on UniFrac distance matrices output by SymPortal
+# as well as categorical information in which year and at which site each ITS2 type profile was found
+#' ---------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 #' -------------------------- PACKAGES -----------------------
 rm(list = ls())
