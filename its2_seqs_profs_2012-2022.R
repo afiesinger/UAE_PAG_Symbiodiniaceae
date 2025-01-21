@@ -74,8 +74,7 @@ rarecurve(x = seq_mat,
           cex.axis = 1.5,
           las = 1)
 
-
-#' ------------------------- BARPLOT OF ITS2 TYPE PROFILES -----------------------
+#' ------------------------- NORMALIZATION OF ITS2 TYPE PROFILES -----------------------
 
 # set working directory
 setwd("path/to/dir")
@@ -123,7 +122,8 @@ gssProf = otuStack(its2ProfsPerc, count.columns = c(5:length(its2ProfsPerc[1, ])
 p = sort(levels(gssProf$otu), decreasing = FALSE)
 p # find profiles and match the colours to the colour scheme of the 2022 barplot (see its2_seqs_profs_2022.R)
 
-# colour scheme
+#' ------------------------------------ SET COLOURS FOR PLOTS -----------------------------------
+
 colors <- c(
   "A1" = "#FF6100", 
   "A1-A13a" = "#FA8F11", 
@@ -161,9 +161,10 @@ colors <- c(
   "D5-D5c-D4a-D5b-D4-D5i-D5a" = "#006400", 
   "D5/D5a-D4-D4a-D2" = "#2E8B57", 
   "D5a-D5-D5ah-D4-D4a" = "#44AA77", 
-  "D5a-D5-D5ah-D4-D5d" = "#88CCAA"
+  "D5a-D5-D5ah-D4-D5d" = "#88CCAA")
 )
-
+                      
+#' ------------------- BARPLOT OF ITS2 TYPE PROFILES DECADAL COMPARISON --------------                
 # split the dataset
 gssProfs = gssProf[,-5] # first remove species column
 colnames(gssProfs) = c("count", "otu", "sample", "Site", "Dataset")
