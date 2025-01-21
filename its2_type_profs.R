@@ -105,7 +105,7 @@ gssProfPdaeSI = gssProfPdae %>% filter(Site == "SI") %>% group_by(Genotype, Spec
 
 # sort by symbiont type
 p = sort(levels(gssProf$otu), decreasing = F)
-p
+p # look at profiles and assign colours to each (see below), for reproducibility across plots
 
 #' ------------------------------------ SET COLOURS FOR PLOTS -----------------------------------
 cols_2022 <- c(
