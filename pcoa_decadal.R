@@ -1,5 +1,10 @@
 #!/usr/bin/env Rscript
 
+# Principal Coordinate Analysis (PCoA) of principal coordinates for Cladocopium ITS2 type profiles as output by SymPortal 
+# for the overlap dataset of Platygyra daedalea of Howells et al. (2020) (“Year 2012”) and this study (“Year 2022”) separated by sampling location 
+# (AA = Al Aqah in the Gulf of Oman, SY = Saadiyat Island in the Persian/Arabian Gulf)
+#' ------------------------------------------------------------------------------------------------------------------------------------------------
+
 #' ----------------------- PACKAGES ------------------------
 
 # Load required libraries
