@@ -1,5 +1,10 @@
 #!usr/bin/env Rscript
 
+# normalize ITS2 type profiles output by SymPortal
+# rarefaction curve of ITS2 post-MED sequences output by SymPortal
+# plot ITS2 type profiles as barplots ordered by decreasing order of profile abundance
+#' ------------------------------------------------------------------------------------
+
 #' ----------------------------------- PACKAGES AND WORKING ENVIRONMENT ----------------------
 rm(list = ls())
 
