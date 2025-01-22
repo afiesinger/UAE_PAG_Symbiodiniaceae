@@ -15,6 +15,8 @@ library(vegan)
 library(readxl)
 library(pairwiseAdonis)
 
+# We are using an Excel sheet of normalized ITS2 type profiles from the shared dataset of Howells et al. (2020) and our dataset from 2022
+
 #' ----------------------------- ANOSIM --------------------------
 
 # POST-MED SEQUENCES #
