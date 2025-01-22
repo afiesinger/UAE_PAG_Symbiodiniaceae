@@ -270,16 +270,16 @@ plot_data <- results_df %>%
   # Complete the data correctly
   complete(Profile, Category, Value, fill = list(Present = 0)) %>%
   # Filter out incorrect combinations
-  filter((Category == "Sites" & Value %in% c("SY", "SI")) | 
+  filter((Category == "Sites" & Value %in% c("SY", "AA")) | 
            (Category == "Species" & Value %in% c("Pdae"))) %>%
   # Order factors
-  mutate(Value = factor(Value, levels = c("Pdae", "SY", "SI")),
+  mutate(Value = factor(Value, levels = c("Pdae", "SY", "AA")),
          Category = factor(Category, levels = c("Species", "Sites"))) %>%
   # Assign colors based on Value and Present
   mutate(fill_color = case_when(
     Category == "Species" & Value == "Pdae" & Present == 1 ~ "#65A595",
     Category == "Sites" & Value == "SY" & Present == 1 ~ "#e8744a",
-    Category == "Sites" & Value == "SI" & Present == 1 ~ "#fcc762",
+    Category == "Sites" & Value == "AA" & Present == 1 ~ "#fcc762",
     Present == 0 ~ "white"))
 
 plot_data$Profile <- factor(plot_data$Profile, levels = rev(unique(plot_data$Profile)))
