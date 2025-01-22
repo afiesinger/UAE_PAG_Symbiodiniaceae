@@ -206,7 +206,7 @@ gssProfFAA = gssProfF %>% filter(Site == "AA") %>% group_by(sample, otu, count)
 gssProfFAA = gssProfFAA[,-c(4:5)] # remove site and dataset because redundant
 
 # reorder dataset for plot - sorted by its2 type profile
-gssProfFAA <- gssProfFSI %>%
+gssProfFAA <- gssProfFAA %>%
   arrange(desc(count))
 
 levels <- unique(gssProfFAA$sample)
