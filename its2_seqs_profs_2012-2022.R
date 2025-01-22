@@ -34,6 +34,8 @@ if (!require("edgeR")){BiocManager::install("edgeR", update = FALSE)
 options("scipen" = 10)
 
 #' ------------- RAREFACTION CURVES OF ITS2 POST-MED SEQUENCES ------------------
+# to assess whether sequencing effort was similar and comparable for both sampling campaigns (2012 and 2022) to infer biodiversity patterns
+
 setwd("path/to/dir")
 seqs = read.table("seqs_abs_abund_clean.txt", header = TRUE)
 
@@ -128,6 +130,7 @@ p = sort(levels(gssProf$otu), decreasing = FALSE)
 p # find profiles and match the colours to the colour scheme of the 2022 barplot (see its2_seqs_profs_2022.R)
 
 #' ------------------------------------ SET COLOURS FOR PLOTS -----------------------------------
+# same colour scheme as 2022 for the profiles that overlap, for better visualization
 
 colors <- c(
   "A1" = "#FF6100", 
