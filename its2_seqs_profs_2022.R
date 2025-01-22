@@ -34,6 +34,7 @@ options("scipen" = 10)
 #' ----------------------------- READ & MODIFY ITS2 POST-MED SEQUENCES OUTPUT BY SYMPORTAL -----------------------------
 
 #' ------------------- THRESHOLD <1% SEQUENCE ABUNDANCE ---------------------
+# to remove very low abundance sequences
 
 # setwd
 setwd("path/to/dir")
