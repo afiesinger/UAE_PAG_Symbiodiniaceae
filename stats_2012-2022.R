@@ -15,7 +15,7 @@ library(vegan)
 library(readxl)
 library(pairwiseAdonis)
 
-# We are using an Excel sheet of normalized ITS2 type profiles from the shared dataset of Howells et al. (2020) and our dataset from 2022
+# We are using an Excel sheet of ITS2 type profiles from the shared dataset of Howells et al. (2020) and our dataset from 2022
 
 #' ----------------------------- ANOSIM --------------------------
 
@@ -249,7 +249,7 @@ plot(datap.ano.d)
 #   anosim(x = datap.dist, grouping = Dataset) 
 # Dissimilarity: bray 
 # 
-# ANOSIM statistic R: 0.3533 
+# ANOSIM statistic R: 0.3543 
 # Significance: 0.001 
 # 
 # Permutation: free
@@ -257,13 +257,13 @@ plot(datap.ano.d)
 # 
 # Upper quantiles of permutations (null model):
 #   90%    95%  97.5%    99% 
-#   0.0212 0.0317 0.0413 0.0522 
+#   0.0222 0.0326 0.0405 0.0473 
 # 
 # Dissimilarity ranks between and within classes:
 #   0%     25%    50%    75%   100%    N
-# Between   24 1536.50 1536.5 1536.5 1536.5 1280
-# Fiesinger  1  475.75 1536.5 1536.5 1536.5  780
-# Howells    2  306.75  466.5 1536.5 1536.5  496
+# Between   13 1536.50 1536.5 1536.5 1536.5 1280
+# Fiesinger  1  470.75 1536.5 1536.5 1536.5  780
+# Howells    2  304.75  462.5 1536.5 1536.5  496
 
 # ITS2 TYPE PROFILES -- SITE SY #
 
@@ -282,7 +282,7 @@ plot(datap.ano.d)
 #   anosim(x = datap.dist, grouping = Dataset) 
 # Dissimilarity: bray 
 # 
-# ANOSIM statistic R: 0.2176 
+# ANOSIM statistic R: 0.2167 
 # Significance: 0.001 
 # 
 # Permutation: free
@@ -290,11 +290,11 @@ plot(datap.ano.d)
 # 
 # Upper quantiles of permutations (null model):
 #   90%    95%  97.5%    99% 
-#   0.0214 0.0338 0.0430 0.0566 
+#   0.0232 0.0337 0.0428 0.0585 
 # 
 # Dissimilarity ranks between and within classes:
 #   0%  25%    50%    75%   100%    N
-# Between   767 1265 2627.5 2627.5 2627.5 1833
+# Between   744 1265 2627.5 2627.5 2627.5 1833
 # Fiesinger   2  344 1568.0 2627.5 2627.5  741
 # Howells     1  563 2627.5 2627.5 2627.5 1081
 
