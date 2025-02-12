@@ -442,6 +442,60 @@ pairwise.adonis(data.profs,
 # pairs Df SumsOfSqs  F.Model        R2 p.value p.adjusted sig
 # 1 Howells vs Fiesinger  1  5.459647 19.12955 0.1854905  0.0001     0.0001 ***
 
+#' -------------------------- NMDS PLOT --------------------------
+
+# Load required packages
+library(vegan)
+library(ggplot2)
+
+mat = as.matrix(its2ProfsNorm[, 5:ncol(its2ProfsNorm)])
+
+set.seed(625)
+nmds = metaMDS(mat, distance = "bray")
+nmds
+
+# Call:
+#   metaMDS(comm = mat, distance = "bray") 
+# 
+# global Multidimensional Scaling using monoMDS
+# 
+# Data:     wisconsin(sqrt(mat)) 
+# Distance: bray 
+# 
+# Dimensions: 2 
+# Stress:     0.008351885 
+# Stress type 1, weak ties
+# Best solution was not repeated after 20 tries
+# The best solution was from try 19 (random start)
+# Scaling: centring, PC rotation, halfchange scaling 
+# Species: expanded scores based on ‘wisconsin(sqrt(mat))’
+
+#extract NMDS scores (x and y coordinates) for sites from newer versions of vegan package
+data.scores = as.data.frame(scores(nmds)$site)
+data.scores.sp = as.data.frame(scores(nmds)$species)
+
+#add columns to data frame 
+data.scores$Site = its2ProfsNorm$Site
+data.scores$Time = its2ProfsNorm$Dataset
+
+head(data.scores)
+
+ggplot(data.scores, aes(x = NMDS1, y = NMDS2)) + 
+  geom_point(size = 5, aes(shape = Site, colour = Time))+ 
+  theme(axis.text.y = element_text(colour = "black", size = 15), 
+        axis.text.x = element_text(colour = "black", size = 15), 
+        legend.text = element_text(size = 15, colour ="black"), 
+        legend.position = "right", axis.title.y = element_text(size = 15), 
+        axis.title.x = element_text(size = 15, colour = "black"), 
+        legend.title = element_text(size = 15, colour = "black"), 
+        panel.background = element_blank(), panel.border = element_rect(colour = "black", fill = NA),
+        legend.key = element_blank()) + 
+  labs(x = "NMDS1", colour = "Year", y = "NMDS2", shape = "Site")  + 
+  scale_shape_manual(values = c(15, 17), labels = c("AA", "SY")) +
+  scale_colour_manual(values = c("#CA61B5", "#5F278A"), labels = c("2012", "2022")) 
+
+ggsave(filename = "NMDS_ITS2_profs_2012-2022.png", dpi = 300, width = 14, height = 12, units = "in")
+
 #' --------------------- SIMPER TEST ---------------------
 
 # ITS2 TYPE PROFILES -- SITE SY #
