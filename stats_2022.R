@@ -191,6 +191,61 @@ anova(its2_dbrda, by = "margin", permutations = 9999)
 # ---
 # Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
 
+
+#' -------------------- NMDS PLOT ON ITS2 TYPE PROFILES -------------------------
+
+# Load required packages
+library(vegan)
+library(ggplot2)
+
+mat = as.matrix(its2ProfsNorm[, 4:ncol(its2ProfsNorm)])
+
+set.seed(625)
+nmds = metaMDS(mat, distance = "bray")
+nmds
+
+# Call:
+#   metaMDS(comm = mat, distance = "bray") 
+# 
+# global Multidimensional Scaling using monoMDS
+# 
+# Data:     wisconsin(sqrt(mat)) 
+# Distance: bray 
+# 
+# Dimensions: 2 
+# Stress:     0.003320571 
+# Stress type 1, weak ties
+# Best solution was not repeated after 20 tries
+# The best solution was from try 16 (random start)
+# Scaling: centring, PC rotation, halfchange scaling 
+# Species: expanded scores based on ‘wisconsin(sqrt(mat))’
+
+#extract NMDS scores (x and y coordinates) for sites from newer versions of vegan package
+data.scores = as.data.frame(scores(nmds)$site)
+data.scores.sp = as.data.frame(scores(nmds)$species)
+
+#add columns to data frame 
+data.scores$Site = its2ProfsNorm$Site
+data.scores$Species = its2ProfsNorm$Species
+
+head(data.scores)
+
+ggplot(data.scores, aes(x = NMDS1, y = NMDS2)) + 
+  geom_point(size = 5, aes(shape = Site, colour = Species))+ 
+  theme(axis.text.y = element_text(colour = "black", size = 15), 
+        axis.text.x = element_text(colour = "black", size = 15), 
+        legend.text = element_text(size = 15, colour ="black"), 
+        legend.position = "right", axis.title.y = element_text(size = 15), 
+        axis.title.x = element_text(size = 15, colour = "black"), 
+        legend.title = element_text(size = 15, colour = "black"), 
+        panel.background = element_blank(), panel.border = element_rect(colour = "black", fill = NA),
+        legend.key = element_blank()) + 
+  labs(x = "NMDS1", colour = "Species", y = "NMDS2", shape = "Site")  + 
+  scale_colour_manual(values = c("#FFA000", "#825417")) +
+  scale_shape_manual(values = c(16, 15, 17), labels = c("SA", "AA", "SY"))
+
+ggsave(filename = "NMDS_ITS2_profs_2022.png", dpi = 300, width = 14, height = 12, units = "in")
+
 #' -------------- SIMPER TEST BETWEEN PAG AND GO SAMPLES AS WELL AS SPECIES -----------------
 
 # Similarity percentage test (SIMPER) will show us the ITS2 type profiles that contribute the most to the dissimilarity between the different sites and species
