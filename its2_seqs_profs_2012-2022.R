@@ -1,6 +1,5 @@
 #!usr/bin/env Rscript
 
-# normalize ITS2 type profiles output by SymPortal
 # rarefaction curve of ITS2 post-MED sequences output by SymPortal
 # plot ITS2 type profiles as barplots ordered by decreasing order of profile abundance
 #' ------------------------------------------------------------------------------------
@@ -8,30 +7,20 @@
 #' ----------------------------------- PACKAGES AND WORKING ENVIRONMENT ----------------------
 rm(list = ls())
 
-if (!require("pacman")) install.packages("pacman")
-
-pacman::p_load("dplyr", "edgeR", "ggplot2", "MCMC.OTU", "pairwiseAdonis", "rcartocolor", "RColorBrewer", "Redmonder", "reshape2", "vegan", "gridExtra", "scales", "readxl", "ape")
-
 library(latex2exp)
-library(ggcorrplot2)
 library(ggplot2)
 library(reshape2)
 library(ggforce)
-library(RColorBrewer)
 library(vegan)
 library(scales)
 library(gridExtra)
 library(readxl)
-library(ape)
 library(dplyr)
+library(tidyr)
 library(ggpubr)
 
-pacman::p_load_gh("pmartinezarbizu/pairwiseAdonis/pairwiseAdonis")
-
-if (!require("edgeR")){BiocManager::install("edgeR", update = FALSE)
-  library(edgeR)}
-
-options("scipen" = 10)
+# set working directory
+setwd("path/to/dir")
 
 #' ------------- RAREFACTION CURVES OF ITS2 POST-MED SEQUENCES ------------------
 # to assess whether sequencing effort was similar and comparable for both sampling campaigns (2012 and 2022) to infer biodiversity patterns
@@ -81,53 +70,40 @@ rarecurve(x = seq_mat,
           cex.axis = 1.5,
           las = 1)
 
-#' ------------------------- NORMALIZATION OF ITS2 TYPE PROFILES -----------------------
+#' ------------------------- READ IN ITS2 TYPE PROFILE DATA -----------------------
 
-# set working directory
-setwd("path/to/dir")
-
-# data
-its2Profs = as.data.frame(read_excel("filename.xlsx))
+its2Profs = as.data.frame(read_excel("filtered_data_SY_SI_Pdae_Howells_Fiesinger.xlsx", sheet = 2))
 head(its2Profs)
 
-# normalize the data
-its2ProfsTransposed = t(its2Profs[, 5:length(its2Profs[1, ])])
-its2ProfsList = DGEList(counts = its2ProfsTransposed)
-head(its2ProfsList$samples)
+genoshort = read_excel("filtered_data_SY_SI_Pdae_Howells_Fiesinger.xlsx", sheet = 3)
 
-its2ProfsNorm = calcNormFactors(its2ProfsList, method = "TMM")
-head(its2ProfsNorm$samples)
-its2TMM = t(cpm(its2ProfsNorm, normalized.lib.sizes = TRUE))
-its2ProfsNorm = cbind(genoshort, its2Profs[,c(2:4)], its2TMM)
-head(its2ProfsNorm)
+its2Profs = cbind(genoshort[,6], its2Profs[,-1]) # add all together into metadata dataframe
+its2Profs = its2Profs[,-3] # remove species column because we only have Pdae
+colnames(its2Profs)[1] = "Genotype" # relabel genotype column
+head(its2Profs)
 
-# plotting the data
-colOrder = order(colSums(its2ProfsNorm[5:length(its2ProfsNorm[1,])]), decreasing = TRUE) + 4
+# Split dataset for plotting in separate panels
+its2ProfsH = its2Profs %>% filter(Dataset == "Howells") %>% group_by(Genotype, Site)
+its2ProfsHSY = its2ProfsH %>% filter(Site == "SY") %>% group_by(Genotype)
+its2ProfsHSI = its2ProfsH %>% filter(Site == "SI") %>% group_by(Genotype)
 
-its2ProfsPerc = cbind(its2ProfsNorm[,c(1:4)],its2ProfsNorm[,c(colOrder)])
+its2ProfsF = its2Profs %>% filter(Dataset == "Fiesinger") %>% group_by(Genotype, Site)
+its2ProfsFSY = its2ProfsF %>% filter(Site == "SY") %>% group_by(Genotype)
+its2ProfsFSI = its2ProfsF %>% filter(Site == "SI") %>% group_by(Genotype)
 
-its2ProfsPerc$sum = apply(its2ProfsPerc[, c(5:length(its2ProfsPerc[1,]))], 1, function(x) {
-  sum(x, na.rm = T)
-})
+# convert dataframes to long format for plotting
+process_data <- function(data) {
+  data_long <- data %>%
+    pivot_longer(cols = -c(Genotype, Site, Dataset), names_to = "Profile", values_to = "Abundance")
+}
 
-its2ProfsPerc = cbind(its2ProfsPerc[, c(1:4)], (its2ProfsPerc[, c(5:(ncol(its2ProfsPerc)-1))] / its2ProfsPerc$sum))
-head(its2ProfsPerc)
+its2Profs_long <- process_data(its2Profs)
+p = sort(unique(its2Profs_long$Profile), decreasing = FALSE) # for displaying profiles in legend
 
-# sanity checking
-apply(its2ProfsPerc[, c(5:(ncol(its2ProfsPerc)))], 1, function(x) {
-  sum(x, na.rm = TRUE)
-})
-
-# prepare data for plotting
-gssProf = otuStack(its2ProfsPerc, count.columns = c(5:length(its2ProfsPerc[1, ])), condition.columns = c(1:4))
-
-# inspect the gssProf and remove the summ rows (otu level = summ)
-gssProf = otuStack(its2ProfsPerc, count.columns = c(5:length(its2ProfsPerc[1, ])),
-                   condition.columns = c(1:4))[1:5530,]
-
-# sort by symbiont type
-p = sort(levels(gssProf$otu), decreasing = FALSE)
-p # find profiles and match the colours to the colour scheme of the 2022 barplot (see its2_seqs_profs_2022.R)
+its2ProfsHSY_long <- process_data(its2ProfsHSY)
+its2ProfsHSI_long <- process_data(its2ProfsHSI)
+its2ProfsFSY_long <- process_data(its2ProfsFSY)
+its2ProfsFSI_long <- process_data(its2ProfsFSI)
 
 #' ------------------------------------ SET COLOURS FOR PLOTS -----------------------------------
 # same colour scheme as 2022 for the profiles that overlap, for better visualization
@@ -173,65 +149,12 @@ colors <- c(
 )
                       
 #' ------------------- BARPLOT OF ITS2 TYPE PROFILES DECADAL COMPARISON --------------                
-# split the dataset
-gssProfs = gssProf[,-5] # first remove species column
-colnames(gssProfs) = c("count", "otu", "sample", "Site", "Dataset")
-
-# make howells (2012) datasets split by site
-gssProfH = gssProfs %>% filter(Dataset == "Howells") %>% group_by(sample, otu, count, Site)
-
-## AA
-gssProfHAA = gssProfH %>% filter(Site == "AA") %>% group_by(sample, otu, count)
-gssProfHAA = gssProfHAA[,-c(4:5)] # remove site and dataset because redundant
-
-# reorder dataset for plot - sorted by its2 type profile
-gssProfHAA <- gssProfHAA %>%
-  arrange(desc(count))
-
-levels <- unique(gssProfHAA$sample)
-gssProfHAA$sample <- factor(gssProfHAA$sample, levels = levels)
-
-## SY
-gssProfHSY = gssProfH %>% filter(Site == "SY") %>% group_by(sample, otu, count)
-gssProfHSY = gssProfHSY[,-c(4:5)] # remove site and dataset because redundant
-
-gssProfHSY <- gssProfHSY %>%
-  arrange(desc(count))
-
-levels <- unique(gssProfHSY$sample)
-gssProfHSY$sample <- factor(gssProfHSY$sample, levels = levels)
-
-# make fiesinger (2022) datasets split by site
-gssProfF = gssProfs %>% filter(Dataset == "Fiesinger") %>% group_by(sample, otu, count, Site)
-
-## AA
-gssProfFAA = gssProfF %>% filter(Site == "AA") %>% group_by(sample, otu, count)
-gssProfFAA = gssProfFAA[,-c(4:5)] # remove site and dataset because redundant
-
-# reorder dataset for plot - sorted by its2 type profile
-gssProfFAA <- gssProfFAA %>%
-  arrange(desc(count))
-
-levels <- unique(gssProfFAA$sample)
-gssProfFAA$sample <- factor(gssProfFAA$sample, levels = levels)
-
-## SY
-gssProfFSY = gssProfF %>% filter(Site == "SY") %>% group_by(sample, otu, count)
-gssProfFSY = gssProfFSY[,-c(4:5)] # remove site and dataset because redundant
-
-gssProfFSY <- gssProfFSY %>%
-  arrange(desc(count))
-
-levels <- unique(gssProfFSY$sample)
-gssProfFSY$sample <- factor(gssProfFSY$sample, levels = levels)
-
-# plot in 4 panels; plot each ggplot first, then ggarrange
 
 hsy = ggplot() +
-  geom_bar(aes(y = count, x = sample, fill = factor(otu)), data = gssProfHSY, stat = "identity", position = "fill")  +  
+  geom_bar(aes(y = Abundance, x = Genotype, fill = factor(Profile)), data = its2ProfsHSY_long, stat = "identity", position = "fill")  +  
   scale_y_continuous(labels = percent_format(), expand = c(0, 0)) + 
   labs(y = "Percentage", x = "", title = expression(paste(italic("N"), " = 47"))) + 
-  scale_fill_manual(values = colors, breaks = p) + 
+  scale_fill_manual(values = colors) + 
   #guides(fill = guide_legend(ncol = 1, title = expression(paste(italic("ITS2"), " type profile")))) +
   theme(axis.text.x = element_text(angle = 90, vjust = 0, size = 15, color = "black"), 
         axis.title.x = element_text(color = "black", size = 15),
@@ -241,11 +164,11 @@ hsy = ggplot() +
         axis.text.y = element_text(color = "black", size = 15),
         plot.background = element_blank())
 
-haa = ggplot() +
-  geom_bar(aes(y = count, x = sample, fill = factor(otu)), data = gssProfHAA, stat = "identity", position = "fill")  +  
+hsi = ggplot() +
+  geom_bar(aes(y = Abundance, x = Genotype, fill = factor(Profile)), data = its2ProfsHSI_long, stat = "identity", position = "fill")  +  
   scale_y_continuous(labels = percent_format(), expand = c(0, 0)) + 
   labs(y = "", x = "", title = expression(paste(italic("N"), " = 32"))) + 
-  scale_fill_manual(values = colors, breaks = p) + 
+  scale_fill_manual(values = colors) + 
   #guides(fill = guide_legend(ncol = 1, title = expression(paste(italic("ITS2"), " type profile")))) +
   theme(axis.text.x = element_text(angle = 90, vjust = 0, size = 15, color = "black"), 
         axis.title.x = element_text(color = "black", size = 15),
@@ -256,10 +179,10 @@ haa = ggplot() +
         plot.background = element_blank())
 
 fsy = ggplot() +
-  geom_bar(aes(y = count, x = sample, fill = factor(otu)), data = gssProfFSY, stat = "identity", position = "fill")  +  
+  geom_bar(aes(y = Abundance, x = Genotype, fill = factor(Profile)), data = its2ProfsFSY_long, stat = "identity", position = "fill")  +  
   scale_y_continuous(labels = percent_format(), expand = c(0, 0)) + 
   labs(y = "Percentage", x = "Host genotype", title = expression(paste(italic("N"), " = 39"))) + 
-  scale_fill_manual(values = colors, breaks = p) + 
+  scale_fill_manual(values = colors) + 
   #guides(fill = guide_legend(ncol = 1, title = expression(paste(italic("ITS2"), " type profile")))) +
   theme(axis.text.x = element_text(angle = 90, vjust = 0, size = 15, color = "black"), 
         axis.title.x = element_text(color = "black", size = 15),
@@ -269,21 +192,22 @@ fsy = ggplot() +
         axis.text.y = element_text(color = "black", size = 15),
         plot.background = element_blank())
 
-faa = ggplot() +
-  geom_bar(aes(y = count, x = sample, fill = factor(otu)), data = gssProfFAA, stat = "identity", position = "fill")  +  
+fsi = ggplot() +
+  geom_bar(aes(y = Abundance, x = Genotype, fill = factor(Profile)), data = its2ProfsFSI_long, stat = "identity", position = "fill")  +  
   scale_y_continuous(labels = percent_format(), expand = c(0, 0)) + 
   labs(y = "", x = "Host genotype", title = expression(paste(italic("N"), " = 40"))) + 
-  scale_fill_manual(values = colors, breaks = p) + 
-  #guides(fill = guide_legend(ncol = 1, title = expression(paste(italic("ITS2"), " type profile")))) +
+  scale_fill_manual(values = colors) + 
+  guides(fill = guide_legend(ncol = 2, title = "ITS2 type profile")) +
   theme(axis.text.x = element_text(angle = 90, vjust = 0, size = 15, color = "black"),
         axis.title.x = element_text(color = "black", size = 15),
-        legend.position = "",
+        legend.position = "right",
         plot.title = element_text(hjust = 0.5, size = 15), 
         axis.title.y = element_text(color = "black", size = 15),
         axis.text.y = element_text(color = "black", size = 15),
         plot.background = element_blank())
 
-ggarrange(hsy, haa, fsy, faa, ncol = 2, nrow = 2)
+g = ggarrange(hsy, hsi, fsy, fsi, ncol = 2, nrow = 2)
+ggsave("filename.pdf", plot = g, 
 
 
 
