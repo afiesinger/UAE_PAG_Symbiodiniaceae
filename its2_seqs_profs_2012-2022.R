@@ -207,7 +207,7 @@ fsi = ggplot() +
         plot.background = element_blank())
 
 g = ggarrange(hsy, hsi, fsy, fsi, ncol = 2, nrow = 2)
-ggsave("filename.pdf", plot = g, 
+ggsave(filename = "filename.pdf", plot = g, dpi = 300, width = 18, height = 12, units = "in")
 
 
 
