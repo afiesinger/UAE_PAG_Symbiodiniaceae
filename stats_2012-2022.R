@@ -231,10 +231,10 @@ plot(datas.ano.d)
 # set working directory
 setwd("/path/to/dir")
 
-its2norm = read_excel("filename.xlsx")
-head(its2norm)
+its2profs = read_excel("filename.xlsx")
+head(its2profs)
 
-profs = subset(its2norm, its2norm$Site=="AA")
+profs = subset(its2profs, its2profs$Site=="AA")
 data.profs = profs[, 5:length(profs)]
 datap_meta = profs[, 1:4]
 
@@ -267,7 +267,7 @@ plot(datap.ano.d)
 
 # ITS2 TYPE PROFILES -- SITE SY #
 
-profs = subset(its2norm, its2norm$Site=="SY")
+profs = subset(its2profs, its2profs$Site=="SY")
 data.profs = profs[, 5:length(profs)]
 datap_meta = profs[, 1:4]
 
@@ -300,11 +300,11 @@ plot(datap.ano.d)
 
 #' -------------- PERMDISP & PERMUTATION TESTS -----------------
 
-# its2norm is df from above
+# its2profs is df from above
 
 # Site #
 set.seed(694) # setting seed allows repetition of randomized processes
-its2dispSite = betadisper(vegdist(its2norm[, c(5:ncol(its2norm))]), its2norm$Site)
+its2dispSite = betadisper(vegdist(its2profs[, c(5:ncol(its2profs))]), its2profs$Site)
 anova(its2dispSite)
 
 # Response: Distances
@@ -336,7 +336,7 @@ its2PermTest
 
 # Dataset (2012 vs. 2022) #
 set.seed(694) 
-its2dispDat = betadisper(vegdist(its2norm[, c(5:ncol(its2norm))]), its2norm$Dataset)
+its2dispDat = betadisper(vegdist(its2profs[, c(5:ncol(its2profs))]), its2profs$Dataset)
 anova(its2dispDat)
 
 # Response: Distances
@@ -371,7 +371,7 @@ its2PermTest2
 #' ------------------------- PERMANOVA -------------------------
 
 set.seed(694)
-its2Adonis = adonis2(its2norm[, c(5:ncol(its2norm))] ~ Site * Dataset, data = its2norm, permutations = 9999, method = "bray")
+its2Adonis = adonis2(its2profs[, c(5:ncol(its2profs))] ~ Site * Dataset, data = its2profs, permutations = 9999, method = "bray")
 its2Adonis
 
 # Permutation test for adonis under reduced model
@@ -379,7 +379,7 @@ its2Adonis
 # Permutation: free
 # Number of permutations: 9999
 # 
-# adonis2(formula = its2norm[, c(5:ncol(its2norm))] ~ Site * Dataset, data = its2norm, permutations = 9999, method = "bray")
+# adonis2(formula = its2profs[, c(5:ncol(its2profs))] ~ Site * Dataset, data = its2profs, permutations = 9999, method = "bray")
 # Df SumOfSqs      R2      F Pr(>F)    
 # Site           1   10.018 0.14652 33.291 0.0001 ***
 # Dataset        1    5.967 0.08726 19.827 0.0001 ***
@@ -395,8 +395,8 @@ its2Adonis
 
 # SITE #
 set.seed(694)
-its2PWAdonisSite = pairwise.adonis(its2norm[, c(5:ncol(its2norm))],
-                                   factors = its2norm$Site,
+its2PWAdonisSite = pairwise.adonis(its2profs[, c(5:ncol(its2profs))],
+                                   factors = its2profs$Site,
                                    sim.method = "bray", p.adjust.m = "BH", perm = 9999)
 
 its2PWAdonisSite
@@ -407,8 +407,8 @@ its2PWAdonisSite
 # DATASET 2012 vs. 2022 #
 
 set.seed(694)
-its2PWAdonisDat = pairwise.adonis(its2norm[, c(5:ncol(its2norm))],
-                                  factors = its2norm$Dataset,
+its2PWAdonisDat = pairwise.adonis(its2profs[, c(5:ncol(its2profs))],
+                                  factors = its2profs$Dataset,
                                   sim.method = "bray", p.adjust.m = "BH", perm = 9999)
 
 its2PWAdonisDat
@@ -419,7 +419,7 @@ its2PWAdonisDat
 # Now we will do for each SITE a pairwise PERMANOVA to look for differences in DATASET (i.e. sampling year)
 
 # SITE AA #
-profs = subset(its2norm, its2norm$Site=="AA")
+profs = subset(its2profs, its2profs$Site=="AA")
 data.profs = profs[, 5:length(profs)]
 
 set.seed(694)
@@ -431,7 +431,7 @@ pairwise.adonis(data.profs,
 # 1 Howells vs Fiesinger  1  6.554576 20.51054 0.2266094  0.0001     0.0001 ***
 
 # SITE SY #
-profs = subset(its2norm, its2norm$Site=="SY")
+profs = subset(its2profs, its2profs$Site=="SY")
 data.profs = profs[, 5:length(profs)]
 
 set.seed(694)
@@ -448,7 +448,7 @@ pairwise.adonis(data.profs,
 library(vegan)
 library(ggplot2)
 
-mat = as.matrix(its2ProfsNorm[, 5:ncol(its2ProfsNorm)])
+mat = as.matrix(its2profs[, 5:ncol(its2profs)])
 
 set.seed(625)
 nmds = metaMDS(mat, distance = "bray")
@@ -475,8 +475,8 @@ data.scores = as.data.frame(scores(nmds)$site)
 data.scores.sp = as.data.frame(scores(nmds)$species)
 
 #add columns to data frame 
-data.scores$Site = its2ProfsNorm$Site
-data.scores$Time = its2ProfsNorm$Dataset
+data.scores$Site = its2profs$Site
+data.scores$Time = its2profs$Dataset
 
 head(data.scores)
 
@@ -499,7 +499,7 @@ ggsave(filename = "NMDS_ITS2_profs_2012-2022.png", dpi = 300, width = 14, height
 #' --------------------- SIMPER TEST ---------------------
 
 # ITS2 TYPE PROFILES -- SITE SY #
-profs = subset(its2ProfsNorm, its2ProfsNorm$Site=="SY")
+profs = subset(its2profs, its2profs$Site=="SY")
 
 its2Simper1 = simper(sqrt(profs[, c(5:ncol(profs))]), profs$Dataset)
 summary(its2Simper1)
@@ -548,7 +548,7 @@ summary(its2Simper1)
 # Number of permutations: 999
 
 # ITS2 TYPE PROFILES -- SITE AA #
-profs2 = subset(its2ProfsNorm, its2ProfsNorm$Site=="AA")
+profs2 = subset(its2profs, its2profs$Site=="AA")
 
 its2Simper2 = simper(sqrt(profs2[, c(5:ncol(profs2))]), profs2$Dataset)
 summary(its2Simper2)
