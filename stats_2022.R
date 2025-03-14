@@ -7,7 +7,7 @@
 #' -------------------- PACKAGES & DATA ---------------------
 library(vegan)
 
-# We are utilizing the data.frame "its2ProfsNorm" (ITS2 type profiles normalized) from the script "its2_seqs_profs_2022.R"
+# We are utilizing the data.frame "its2Profs" (ITS2 type profiles) from the script "its2_seqs_profs_2022.R"
 
 #' ------------------------ PERMDISP -----------------------
 # Using betadisper() in vegan to look at multivariate homogeneity of dispersion (PERMDISP) between sites and species using Bray-Curtis dissimilarity. 
@@ -19,7 +19,7 @@ library(vegan)
 # difference between sites
 set.seed(694) # setting seed allows repetition of randomized processes
 
-its2dispSite = betadisper(vegdist(its2ProfsNorm[, c(4:ncol(its2ProfsNorm))]), its2ProfsNorm$Site)
+its2dispSite = betadisper(vegdist(its2Profs[, c(4:ncol(its2Profs))]), its2Profs$Site)
 
 anova(its2dispSite)
 
@@ -37,7 +37,7 @@ anova(its2dispSite)
 # difference between species
 set.seed(694) # setting seed allows repetition of randomized processes
 
-its2dispSpec = betadisper(vegdist(its2ProfsNorm[, c(4:ncol(its2ProfsNorm))]), its2ProfsNorm$Species)
+its2dispSpec = betadisper(vegdist(its2Profs[, c(4:ncol(its2Profs))]), its2Profs$Species)
 
 anova(its2dispSpec)
 
@@ -92,7 +92,7 @@ its2PermTest$statistic
 # Site, Species, and the interaction between Site and Species. 
 
 set.seed(694)
-its2Adonis = adonis2(its2ProfsNorm[, c(4:ncol(its2ProfsNorm))] ~ Species * Site, data = its2ProfsNorm, permutations = 9999, method = "bray")
+its2Adonis = adonis2(its2Profs[, c(4:ncol(its2Profs))] ~ Species * Site, data = its2Profs, permutations = 9999, method = "bray")
 
 its2Adonis
 # Permutation test for adonis under reduced model
@@ -100,7 +100,7 @@ its2Adonis
 # Permutation: free
 # Number of permutations: 9999
 # 
-# adonis2(formula = its2ProfsNorm[, c(4:ncol(its2ProfsNorm))] ~ Species * Site, data = its2ProfsNorm, permutations = 9999, method = "bray")
+# adonis2(formula = its2Profs[, c(4:ncol(its2Profs))] ~ Species * Site, data = its2Profs, permutations = 9999, method = "bray")
 #               Df SumOfSqs      R2      F Pr(>F)    
 # Species        1    8.922 0.09964 29.646 0.0001 ***
 # Site           2   14.570 0.16273 24.207 0.0001 ***
@@ -116,8 +116,8 @@ its2Adonis
 
 # pairwise sites
 set.seed(694)
-its2PWAdonisSite = pairwise.adonis(its2ProfsNorm[, c(4:ncol(its2ProfsNorm))],
-                               factors = its2ProfsNorm$Site,
+its2PWAdonisSite = pairwise.adonis(its2Profs[, c(4:ncol(its2Profs))],
+                               factors = its2Profs$Site,
                                sim.method = "bray", p.adjust.m = "BH", perm = 9999)
 
 its2PWAdonisSite
@@ -128,8 +128,8 @@ its2PWAdonisSite
 
 # pairwise species
 set.seed(694)
-its2PWAdonisSpecies = pairwise.adonis(its2ProfsNorm[, c(4:ncol(its2ProfsNorm))],
-                                   factors = its2ProfsNorm$Species,
+its2PWAdonisSpecies = pairwise.adonis(its2Profs[, c(4:ncol(its2Profs))],
+                                   factors = its2Profs$Species,
                                    sim.method = "bray", p.adjust.m = "BH", perm = 9999)
 
 its2PWAdonisSpecies
@@ -145,10 +145,10 @@ its2PWAdonisSpecies
 set.seed(694)
 
 # Calculate Bray-Curtis dissimilarity matrix
-its2_dist <- vegdist(its2ProfsNorm[, 4:ncol(its2ProfsNorm)], method = "bray")
+its2_dist <- vegdist(its2Profs[, 4:ncol(its2Profs)], method = "bray")
 
 # Perform dbRDA using Species and Site as constraints
-its2_dbrda <- dbrda(its2_dist ~ Species * Site, data = its2ProfsNorm)
+its2_dbrda <- dbrda(its2_dist ~ Species * Site, data = its2Profs)
 
 # Summary of the dbRDA
 summary(its2_dbrda)
@@ -159,8 +159,8 @@ R2_adj
 
 # Plot the dbRDA results
 plot(its2_dbrda, display = c("sites", "bp"), scaling = 2, main = "dbRDA of ITS2 Profiles")
-ordihull(its2_dbrda, groups = its2ProfsNorm$Species, draw = "polygon", col = c("red", "blue"), label = TRUE)
-ordihull(its2_dbrda, groups = its2ProfsNorm$Site, draw = "polygon", col = c("green", "purple"), label = TRUE)
+ordihull(its2_dbrda, groups = its2Profs$Species, draw = "polygon", col = c("red", "blue"), label = TRUE)
+ordihull(its2_dbrda, groups = its2Profs$Site, draw = "polygon", col = c("green", "purple"), label = TRUE)
 
 # Perform ANOVA on dbRDA to test significance of constraints
 anova(its2_dbrda, permutations = 9999)
@@ -169,7 +169,7 @@ anova(its2_dbrda, permutations = 9999)
 # Permutation: free
 # Number of permutations: 9999
 # 
-# Model: dbrda(formula = its2_dist ~ Species * Site, data = its2ProfsNorm)
+# Model: dbrda(formula = its2_dist ~ Species * Site, data = its2Profs)
 # Df SumOfSqs     F Pr(>F)    
 # Model      4   31.988 26.82  1e-04 ***
 # Residual 193   57.547                 
@@ -184,7 +184,7 @@ anova(its2_dbrda, by = "margin", permutations = 9999)
 # Permutation: free
 # Number of permutations: 9999
 # 
-# Model: dbrda(formula = its2_dist ~ Species * Site, data = its2ProfsNorm)
+# Model: dbrda(formula = its2_dist ~ Species * Site, data = its2Profs)
 # Df SumOfSqs      F Pr(>F)    
 # Species:Site   1    8.218 27.563  1e-04 ***
 # Residual     193   57.547                  
@@ -198,7 +198,7 @@ anova(its2_dbrda, by = "margin", permutations = 9999)
 library(vegan)
 library(ggplot2)
 
-mat = as.matrix(its2ProfsNorm[, 4:ncol(its2ProfsNorm)])
+mat = as.matrix(its2Profs[, 4:ncol(its2Profs)])
 
 set.seed(625)
 nmds = metaMDS(mat, distance = "bray")
@@ -225,8 +225,8 @@ data.scores = as.data.frame(scores(nmds)$site)
 data.scores.sp = as.data.frame(scores(nmds)$species)
 
 #add columns to data frame 
-data.scores$Site = its2ProfsNorm$Site
-data.scores$Species = its2ProfsNorm$Species
+data.scores$Site = its2Profs$Site
+data.scores$Species = its2Profs$Species
 
 head(data.scores)
 
@@ -251,9 +251,8 @@ ggsave(filename = "NMDS_ITS2_profs_2022.png", dpi = 300, width = 14, height = 12
 # Similarity percentage test (SIMPER) will show us the ITS2 type profiles that contribute the most to the dissimilarity between the different sites and species
 
 # Species
-head(its2ProfsNorm)
 
-its2Simper1 = simper(sqrt(its2ProfsNorm[, c(4:ncol(its2ProfsNorm))]), its2ProfsNorm$Species)
+its2Simper1 = simper(sqrt(its2Profs[, c(4:ncol(its2Profs))]), its2Profs$Species)
 summary(its2Simper1)
 
 # Contrast: Pdae_Phar 
@@ -307,9 +306,8 @@ summary(its2Simper1)
 # Number of permutations: 999
 
 # Sites
-head(its2ProfsNorm)
 
-its2Simper2 = simper(sqrt(its2ProfsNorm[, c(4:ncol(its2ProfsNorm))]), its2ProfsNorm$Site)
+its2Simper2 = simper(sqrt(its2Profs[, c(4:ncol(its2Profs))]), its2Profs$Site)
 summary(its2Simper2)
 
 # Contrast: SY_SA 
