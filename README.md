@@ -1,6 +1,6 @@
 # Symbiodiniaceae restructuring over the last decade on the hottest coral reefs on Earth
 
-Metabarcoding using the ITS2 marker gene region and analytical framework https://symportal.org. Scripts for statistical testing and visualisation of Symbiodiniaceae community composition in the Persian/Arabian Gulf and the Gulf of Oman. The corresponding paper can be found here: XXX
+Symbiodiniaceae community composition analyses using the ITS2 marker gene region and analytical framework https://symportal.org. Scripts for statistical testing and visualisation of Symbiodiniaceae community composition in the Persian/Arabian Gulf and the Gulf of Oman. The corresponding paper can be found here: XXX
 
 ## Study overview:
 
