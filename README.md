@@ -1,6 +1,8 @@
 # Symbiodiniaceae restructuring over the last decade on the hottest coral reefs on Earth
 
-Symbiodiniaceae community composition analyses using the ITS2 marker gene region and analytical framework https://symportal.org. Scripts for statistical testing and visualisation of Symbiodiniaceae community composition in the Persian/Arabian Gulf and the Gulf of Oman. The corresponding paper can be found here: XXX
+Symbiodiniaceae community composition analyses using the ITS2 marker gene region and analytical framework https://symportal.org. Scripts for statistical testing and visualisation of Symbiodiniaceae community composition in the Persian/Arabian Gulf and the Gulf of Oman. The corresponding paper can be found here:
+
+Fiesinger, A., Alderdice, R., Colin, L. et al. Symbiodiniaceae shifts over the last decade on the hottest coral reefs on Earth. Coral Reefs (2025). https://doi.org/10.1007/s00338-025-02767-x
 
 ## Study overview:
 
